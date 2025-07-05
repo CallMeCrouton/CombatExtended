@@ -345,7 +345,7 @@ namespace CombatExtended
                     targetRange.min = coverRange.max;
 
                     // Target fully hidden, shift aim upwards if we're doing suppressive fire
-                    if (targetRange.max <= coverRange.max && (CompFireModes?.CurrentAimMode == AimMode.SuppressFire || VerbPropsCE.ignorePartialLoSBlocker))
+                    if (targetRange.max <= coverRange.max && (CompFireModes?.CurrentAimMode == AimMode.SuppressFire || (VerbPropsCE.ignorePartialLoSBlocker && !VerbPropsCE.onlyManualCast)))
                     {
                         targetRange.max = coverRange.max * 2;
                     }
@@ -1229,6 +1229,11 @@ namespace CombatExtended
         {
             var shortRangeMinCollisionDistance = 1.5f;
             var longRangeMinCollisionDistMult = 0.2f;
+            if (verbProps.onlyManualCast)
+            {
+                return targetDistance;
+            }
+            
             if (targetDistance <= shortRangeMinCollisionDistance / longRangeMinCollisionDistMult)
             {
                 //For targets at close ranges, skip collisions up to 1.5 cells away (avoids shooter embrasure diagonal collisions),
